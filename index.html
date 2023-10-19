@@ -10,33 +10,43 @@
 <body>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const prefixes = ["https://www.google.com/"];
+    document.addEventListener("DOMContentLoaded", function () {
+        const prefixes = ["https://www.google.com/"];
 
-            function getAllParams(url) {
-                const urlObj = new URL(url);
-                let paramString = "";
+        function getAllParams(url) {
+            const urlObj = new URL(url);
+            let paramString = "";
 
-                // Iterando sobre todos os parâmetros da URL
-                for (const [key, value] of urlObj.searchParams) {
-                    paramString += `${paramString ? '&' : ''}${key}=${value}`;
-                }
-
-                return paramString;
+            // Iterando sobre todos os parâmetros da URL
+            for (const [key, value] of urlObj.searchParams) {
+                paramString += `${paramString ? '&' : ''}${key}=${value}`;
             }
 
-            const links = document.querySelectorAll("a");
+            return paramString;
+        }
 
-            links.forEach(link => {
-                const hasPrefix = prefixes.some(prefix => link.href.includes(prefix));
-                if (hasPrefix) {
-                    const params = getAllParams(window.location.href);
-                    const separator = link.href.includes("?") ? "&" : "?";
-                    link.href += `${separator}${params}`;
+        const links = document.querySelectorAll("a");
+
+        links.forEach(link => {
+            const hasPrefix = prefixes.some(prefix => link.href.includes(prefix));
+            if (hasPrefix) {
+                // Capturando as UTM da URL atual
+                const currentUTMs = getAllParams(window.location.href);
+                const separator = link.href.includes("?") ? "&" : "?";
+
+                // Verificando se a URL de destino já possui parâmetros
+                if (link.href.includes("?")) {
+                    // Se a URL de destino já tiver parâmetros, adicionamos as UTM a elas
+                    link.href += `${separator}${currentUTMs}`;
+                } else {
+                    // Se a URL de destino não tiver parâmetros, adicionamos as UTM como parâmetros iniciais
+                    link.href += `${separator}${currentUTMs.substring(1)}`;
                 }
-            });
+            }
         });
-    </script>
+    });
+</script>
+
 
 <script>
 // Variável para rastrear quantos eventos já foram disparados

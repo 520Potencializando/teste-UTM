@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    
+    <!-- Coloque os pixels do Facebook dentro da tag head -->
+    <img style="display:none;" src="https://www.facebook.com/tr?id=9999999999999&ev=InitiateCheckout&noscript=1" width="1px" height="1px">
+    <img style="display:none;" src="https://www.facebook.com/tr?id=9999999999999&ev=PageView&noscript=1" width="1px" height="1px">
+</head>
+<body>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const prefixes = ["https://www.google.com/"];
+
+            function getAllParams(url) {
+                const urlObj = new URL(url);
+                let paramString = "";
+
+                // Iterando sobre todos os parâmetros da URL
+                for (const [key, value] of urlObj.searchParams) {
+                    paramString += `${paramString ? '&' : ''}${key}=${value}`;
+                }
+
+                return paramString;
+            }
+
+            const links = document.querySelectorAll("a");
+
+            links.forEach(link => {
+                const hasPrefix = prefixes.some(prefix => link.href.includes(prefix));
+                if (hasPrefix) {
+                    const params = getAllParams(window.location.href);
+                    const separator = link.href.includes("?") ? "&" : "?";
+                    link.href += `${separator}${params}`;
+                }
+            });
+        });
+    </script>
+
+<script>
+// Variável para rastrear quantos eventos já foram disparados
+var eventosDisparados = 0;
+var totalEventos = 2; // Defina o número total de eventos a serem disparados
+
+// Função para redirecionar o usuário para o site de destino
+function redirecionarParaOutroSite() {
+    // Redirecionar o usuário para o site de destino
+    window.location.href = 'https://www.google.com/';
+}
+
+// Função para verificar se todos os eventos foram disparados
+function verificarEventosDisparados() {
+    eventosDisparados++;
+    
+    // Verifique se todos os eventos foram disparados
+    if (eventosDisparados === totalEventos) {
+        // Todos os eventos foram disparados, redirecione o usuário
+        redirecionarParaOutroSite();
+    }
+}
+
+// Funções para cada tipo de evento (você pode criar funções separadas para cada evento)
+function eventoInitiateCheckout() {
+    verificarEventosDisparados();
+}
+
+function eventoPageView() {
+    verificarEventosDisparados();
+}
+
+// Inicie a verificação dos eventos quando a página for carregada
+window.addEventListener('load', function() {
+    // Associe as funções aos eventos específicos que deseja rastrear
+    // Substitua essas associações pelos eventos do seu site
+    eventoInitiateCheckout();
+    eventoPageView();
+});
+</script>
+
+</body>
+</html>

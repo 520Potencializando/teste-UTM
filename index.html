@@ -10,31 +10,30 @@
 <body>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const prefixes = ["https://www.google.com/"]; // Adicione aqui os prefixos dos sites que deseja rastrear
-
-        function getAllUTMParams() {
-            const utmParams = new URLSearchParams(window.location.search);
-            return utmParams.toString();
+        // Função para obter os parâmetros da URL
+        function getURLParameters(url) {
+            const params = {};
+            const urlParams = new URLSearchParams(url);
+            for (const [key, value] of urlParams) {
+                params[key] = value;
+            }
+            return params;
         }
 
-        function addUTMParamsToLinks(utmParams) {
-            const links = document.querySelectorAll("a");
+        // URL de destino para o redirecionamento
+        const destino = 'https://google.com'; // Altere o URL de destino conforme necessário
 
-            links.forEach(link => {
-                for (const prefix of prefixes) {
-                    if (link.href.startsWith(prefix)) {
-                        const separator = link.href.includes("?") ? "&" : "?";
-                        link.href += separator + utmParams;
-                    }
-                }
-            });
+        // Obter os parâmetros da URL atual
+        const parametrosAtuais = getURLParameters(window.location.search);
+
+        // Redirecionar para o destino com os parâmetros preservados
+        const novaURL = new URL(destino);
+        for (const key in parametrosAtuais) {
+            novaURL.searchParams.set(key, parametrosAtuais[key]);
         }
 
-        const utmParams = getAllUTMParams();
-        addUTMParamsToLinks(utmParams);
-    });
-</script>
+        window.location.href = novaURL.toString();
+    </script>
 
 <script>
 // Variável para rastrear quantos eventos já foram disparados
